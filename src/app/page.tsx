@@ -35,7 +35,27 @@ export default function HomePage() {
     const [student, setStudent] = useState<Student | null>(null);
     const [loading, setLoading] = useState(true);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const router = useRouter();
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            setIsFullscreen(true);
+        } else {
+            document.exitFullscreen();
+            setIsFullscreen(false);
+        }
+    };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
 
     useEffect(() => {
         function checkAuth() {
@@ -83,16 +103,26 @@ export default function HomePage() {
                         {student.career} • <span className="font-mono text-indigo-300">{student.id}</span>
                     </p>
                 </div>
-                <Button
-                    variant="glass"
-                    onClick={() => {
-                        localStorage.removeItem('user_session');
-                        router.push('/login');
-                    }}
-                    className="backdrop-blur-xl bg-white/5 border-white/10 hover:bg-red-500/20 hover:border-red-500/30 transition-all duration-300"
-                >
-                    Cerrar Sesión
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        variant="glass"
+                        onClick={toggleFullscreen}
+                        className="backdrop-blur-xl bg-white/5 border-white/10 hover:bg-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300"
+                        title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                    >
+                        {isFullscreen ? '🗗' : '⛶'}
+                    </Button>
+                    <Button
+                        variant="glass"
+                        onClick={() => {
+                            localStorage.removeItem('user_session');
+                            router.push('/login');
+                        }}
+                        className="backdrop-blur-xl bg-white/5 border-white/10 hover:bg-red-500/20 hover:border-red-500/30 transition-all duration-300"
+                    >
+                        Cerrar Sesión
+                    </Button>
+                </div>
             </motion.header>
 
             {/* Main Actions Grid */}
@@ -187,11 +217,16 @@ export default function HomePage() {
                                     <span>📅</span> Calendario Académico
                                 </li>
                             </ul>
-                            <Link href="/resources">
+                            <a
+                                href="https://webdesktop.ufg.edu.sv/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full"
+                            >
                                 <Button variant="outline" className="w-full border-cyan-500/30 hover:bg-cyan-500/20 text-cyan-100">
-                                    Explorar
+                                    Ir al Portal Web ↗
                                 </Button>
-                            </Link>
+                            </a>
                         </CardContent>
                     </GlassCard>
                 </div>

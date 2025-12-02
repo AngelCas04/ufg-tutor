@@ -195,20 +195,51 @@ export default function CalendarCarousel({ isOpen, onClose }: CalendarCarouselPr
 
                     {/* Footer Indicators */}
                     <div className="p-6 flex justify-center z-20">
-                        <div className="flex gap-2 px-4 py-2 rounded-full bg-black/30 backdrop-blur-md border border-white/5">
+                        <div className="flex items-center gap-4 px-6 py-3 rounded-full bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl relative overflow-hidden">
+                            {/* Glow effect behind the container */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-50" />
+
                             {images.map((_, idx) => (
-                                <motion.div
+                                <button
                                     key={idx}
                                     onClick={() => {
                                         const diff = idx - currentIndex;
                                         setDirection(diff > 0 ? 1 : -1);
                                         setCurrentIndex(idx);
                                     }}
-                                    className={`h-2 rounded-full cursor-pointer transition-all ${idx === currentIndex
-                                            ? "bg-white w-8"
-                                            : "bg-white/30 w-2 hover:bg-white/50"
-                                        }`}
-                                />
+                                    className="relative outline-none group py-2"
+                                >
+                                    {/* Inactive Dot (The path) */}
+                                    <div
+                                        className={`w-2 h-2 rounded-full transition-all duration-500 ${idx === currentIndex
+                                            ? "bg-transparent scale-0"
+                                            : "bg-white/20 group-hover:bg-white/60 group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] scale-100"
+                                            }`}
+                                    />
+
+                                    {/* Active Pill (The Liquid Light) */}
+                                    {idx === currentIndex && (
+                                        <motion.div
+                                            layoutId="venom-pill"
+                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-3 rounded-full"
+                                            style={{
+                                                width: '32px',
+                                                background: 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%)',
+                                                boxShadow: '0 0 20px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3), inset 0 0 5px rgba(255,255,255,0.8)'
+                                            }}
+                                            transition={{
+                                                type: "spring",
+                                                stiffness: 170,
+                                                damping: 20,
+                                                mass: 1,
+                                                restDelta: 0.001
+                                            }}
+                                        >
+                                            {/* Specular highlight for liquid effect */}
+                                            <div className="absolute top-[2px] left-[4px] right-[4px] h-[30%] bg-white/90 rounded-full blur-[1px]" />
+                                        </motion.div>
+                                    )}
+                                </button>
                             ))}
                         </div>
                     </div>
