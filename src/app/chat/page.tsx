@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -243,7 +243,11 @@ export default function ChatPage() {
                                 ) : (
                                     <>
                                         <p className="whitespace-pre-wrap text-sm md:text-base leading-relaxed">
-                                            {msg.content}
+                                            {msg.content.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+                                                part.startsWith('**') && part.endsWith('**')
+                                                    ? <strong key={i} className="font-bold text-accent">{part.slice(2, -2)}</strong>
+                                                    : part
+                                            )}
                                         </p>
                                         {msg.attachments && msg.attachments.length > 0 && (
                                             <div className="mt-2 space-y-2">
@@ -263,9 +267,10 @@ export default function ChatPage() {
                     ))}
 
                     {loading && (
-                        <div className="flex justify-start animate-fade-in">
-                            <div className="bg-secondary/80 backdrop-blur-md border border-white/5 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
-                                <TypingIndicator />
+                        <div className="flex justify-start animate-fade-in w-full">
+                            <div className="bg-secondary/80 backdrop-blur-md border border-white/5 rounded-2xl rounded-bl-none px-6 py-4 shadow-sm flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-accent animate-heartbeat" />
+                                <RotatingText />
                             </div>
                         </div>
                     )}
@@ -336,7 +341,6 @@ export default function ChatPage() {
 }
 
 // Typing animation component
-// Typing animation component for the message content
 function TypingText({ text }: { text: string }) {
     const [displayedText, setDisplayedText] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -346,41 +350,62 @@ function TypingText({ text }: { text: string }) {
             const timeout = setTimeout(() => {
                 setDisplayedText(prev => prev + text[currentIndex]);
                 setCurrentIndex(prev => prev + 1);
-            }, 15); // Speed of typing (milliseconds per character)
+            }, 10); // Faster typing speed (10ms)
 
             return () => clearTimeout(timeout);
         }
     }, [currentIndex, text]);
 
     return (
-        <p className="whitespace-pre-wrap text-sm md:text-base leading-relaxed">
-            {displayedText}
-            {currentIndex < text.length && (
-                <span className="inline-block w-[2px] h-4 bg-current ml-1 animate-pulse" />
-            )}
-        </p>
+        <div className="relative">
+            <p className="whitespace-pre-wrap text-sm md:text-base leading-relaxed">
+                {displayedText.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+                    part.startsWith('**') && part.endsWith('**')
+                        ? <strong key={i} className="font-bold text-accent">{part.slice(2, -2)}</strong>
+                        : part
+                )}
+                {currentIndex < text.length && (
+                    <span className="inline-block w-[2px] h-4 bg-accent ml-1 animate-pulse shadow-[0_0_8px_rgba(192,132,252,0.8)]" />
+                )}
+            </p>
+        </div>
     );
 }
 
-// Telegram-style typing indicator
-function TypingIndicator() {
+function RotatingText() {
+    const words = [
+        "Pensando...",
+        "Analizando...",
+        "Investigando...",
+        "Redactando...",
+        "Preparando...",
+        "Consultando...",
+        "Procesando..."
+    ];
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % words.length);
+        }, 2000); // Change word every 2 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <div className="flex items-center gap-1 h-5">
-            {[0, 1, 2].map((dot) => (
-                <motion.div
-                    key={dot}
-                    className="w-2 h-2 bg-primary/70 rounded-full"
-                    initial={{ y: 0 }}
-                    animate={{ y: -5 }}
-                    transition={{
-                        duration: 0.5,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        ease: "easeInOut",
-                        delay: dot * 0.15
-                    }}
-                />
-            ))}
+        <div className="relative h-5 min-w-[100px] overflow-hidden">
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={index}
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute left-0 text-sm font-medium text-muted-foreground"
+                >
+                    {words[index]}
+                </motion.span>
+            </AnimatePresence>
         </div>
     );
 }
