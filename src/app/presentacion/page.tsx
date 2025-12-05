@@ -157,7 +157,7 @@ export default function PresentationPage() {
     }, []);
 
     return (
-        <div className={`min-h-screen bg-black text-white overflow-hidden relative transition-opacity duration-1000 ${isEntering ? 'opacity-0' : 'opacity-100'} ${isExiting ? 'opacity-0' : ''}`}>
+        <div className={`min-h-screen bg-black text-white overflow-hidden relative transition-opacity duration-1000 ${isEntering || isExiting ? 'opacity-0' : 'opacity-100'}`}>
             {/* Background Animation */}
             <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
                 <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
