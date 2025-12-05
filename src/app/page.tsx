@@ -232,6 +232,32 @@ export default function HomePage() {
                 </div>
             </motion.div>
 
+            {/* Presentation Access Button */}
+            <motion.div
+                variants={item}
+                className="flex justify-center"
+            >
+                <Button
+                    variant="glass"
+                    onClick={() => router.push('/presentacion')}
+                    className="group relative px-8 py-6 backdrop-blur-xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border-2 border-indigo-500/30 hover:border-indigo-400/50 transition-all duration-500 overflow-hidden"
+                >
+                    {/* Animated background */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/0 via-purple-500/20 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Content */}
+                    <div className="relative flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <span className="text-2xl">🚀</span>
+                        </div>
+                        <div className="text-left">
+                            <div className="text-lg font-bold text-white mb-1">Ver Presentación del Proyecto</div>
+                            <div className="text-sm text-indigo-200/70">Conoce la tecnología detrás de UFG Tutor</div>
+                        </div>
+                    </div>
+                </Button>
+            </motion.div>
+
             {/* Calendar Overlay */}
             <CalendarCarousel
                 isOpen={isCalendarOpen}
