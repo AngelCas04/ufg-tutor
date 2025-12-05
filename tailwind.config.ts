@@ -40,15 +40,7 @@ const config: Config = {
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
             },
-            animation: {
-                "accordion-down": "accordion-down 0.2s ease-out",
-                "accordion-up": "accordion-up 0.2s ease-out",
-                "fade-in": "fadeIn 0.5s ease-out forwards",
-                "slide-up": "slideUp 0.5s ease-out forwards",
-                "slide-in-right": "slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
-                "slide-in-left": "slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
-                "bounce-in": "bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards",
-            },
+
             keyframes: {
                 "accordion-down": {
                     from: { height: "0" },
@@ -80,6 +72,26 @@ const config: Config = {
                     "70%": { transform: "scale(0.98)" },
                     "100%": { transform: "scale(1)" },
                 },
+                blob: {
+                    "0%": { transform: "translate(0px, 0px) scale(1)" },
+                    "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                    "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                    "100%": { transform: "translate(0px, 0px) scale(1)" },
+                },
+                shimmer: {
+                    "100%": { transform: "translateX(100%)" },
+                },
+            },
+            animation: {
+                "accordion-down": "accordion-down 0.2s ease-out",
+                "accordion-up": "accordion-up 0.2s ease-out",
+                "fade-in": "fadeIn 0.5s ease-out forwards",
+                "slide-up": "slideUp 0.5s ease-out forwards",
+                "slide-in-right": "slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                "slide-in-left": "slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+                "bounce-in": "bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards",
+                "blob": "blob 7s infinite",
+                "shimmer": "shimmer 2s infinite",
             },
         },
     },
